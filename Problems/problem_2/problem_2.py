@@ -16,8 +16,13 @@ def find_files(suffix, path):
     Returns:
        a list of paths
     """
+
+    if suffix == '' or suffix is None or path is None:
+        return None
+
     # list of paths which has the file
     file_path_list = list()
+
     file_recursion(suffix, path, file_path_list)
     return file_path_list
 
@@ -33,7 +38,12 @@ def file_recursion(suffix, path, file_path_list):
     except FileNotFoundError: # If file is not found
         file_path_list.append("Path Not Found!!")
 
+
+## ----- TEST CASES ------
+
 #TEST CASE 1
+print()
+print("---------------- Test Cases ----------------")
 print()
 print(find_files('.c', '.'))
 #EXPECTED OUTPUT - ['.\\subdir1\\a.c', '.\\subdir3\\subsubdir1\\b.c', '.\\subdir5\\a.c', '.\\t1.c']
@@ -57,3 +67,36 @@ print()
 #TEST CASE 5
 print(find_files('.txt', './something'))
 #EXPECTED OUTPUT - ['Path Not Found!!']
+
+##------ EDGE TEST CASES ------
+print()
+print("---------------- Edge Test Cases ----------------")
+print()
+#EDGE TEST CASE 1
+print(find_files('', ''))
+#EXPECTED OUTPUT - None
+
+print()
+#EDGE TEST CASE 2
+print(find_files('', '.'))
+#EXPECTED OUTPUT - None
+
+print()
+#EDGE TEST CASE 3
+print(find_files('.py', ''))
+#EXPECTED OUTPUT - ['Path Not Found!!']
+
+print()
+#EDGE TEST CASE 3
+print(find_files('.py', None))
+#EXPECTED OUTPUT - None
+
+print()
+#EDGE TEST CASE 3
+print(find_files(None, '.'))
+#EXPECTED OUTPUT - None
+
+print()
+#EDGE TEST CASE 3
+print(find_files(None, None))
+#EXPECTED OUTPUT - None

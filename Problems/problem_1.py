@@ -3,7 +3,7 @@
 
 # # Problem 1: LRU Cache
 
-# In[1]:
+# In[120]:
 
 
 # Doubly Linked List Node
@@ -31,7 +31,7 @@ class LRU_Cache(object):
     def get(self, key):
         
         # Retrieve item from provided key. Return -1 if nonexistent.
-        if not self.keys.get(key):
+        if not self.keys.get(key) or self.capacity == 0:
             return -1
         
         node = self.keys.get(key)
@@ -61,6 +61,8 @@ class LRU_Cache(object):
                 
     # Set an element in the cache
     def set(self, key, value):
+        if self.capacity == 0:
+            return None
         # Set the value if the key is not present in the cache. If the cache is at capacity remove the oldest item.
         if not self.keys.get(key): # Check whether the key is present in List
             node = DLLNode(key, value)
@@ -78,6 +80,11 @@ class LRU_Cache(object):
             elif self.current_size >= self.capacity:  # If the cache is at its full capacity
                 self.keys[key] = node
                 lru_key = self.head.key
+                if self.head.right is None:
+                    self.head = node
+                    self.tail = node
+                    del self.keys[lru_key]
+                    return
                 self.head = self.head.right
                 self.head.left = None
                 del self.keys[lru_key]
@@ -85,24 +92,28 @@ class LRU_Cache(object):
                 node.left = self.tail
                 self.tail = node
                 self.tail.right = None
-        else:
-            return "Already Present!"
+        else: # If the key is already present in cache
+            self.keys[key].value = value
+            self.get(key)
+            return
         
     # Display elements present in the cache
     def display(self):
         currentNode = self.head
+        if currentNode is None:
+            return print(None)
         while currentNode is not None:
             print(currentNode.value, end=' ')
             currentNode = currentNode.right
             
-our_cache = LRU_Cache(5)
 
 
 # # Test Cases
 
-# In[3]:
+# In[121]:
 
 
+our_cache = LRU_Cache(5)
 our_cache.set(1, 1)
 our_cache.set(2, 2)
 our_cache.set(3, 3)
@@ -110,7 +121,7 @@ our_cache.display()
 # Expected Output: 1 2 3
 
 
-# In[4]:
+# In[122]:
 
 
 our_cache.set(4, 4);
@@ -118,14 +129,14 @@ our_cache.display()
 # Expected Output: 1 2 3 4
 
 
-# In[5]:
+# In[123]:
 
 
 our_cache.get(1)
 # Expected Output: 1
 
 
-# In[6]:
+# In[124]:
 
 
 our_cache.get(2)
@@ -133,14 +144,14 @@ our_cache.display()
 # Expected Output: 3 4 1 2
 
 
-# In[7]:
+# In[125]:
 
 
 our_cache.get(9)
 # Expected Output: -1
 
 
-# In[8]:
+# In[126]:
 
 
 our_cache.set(5, 5);
@@ -148,7 +159,7 @@ our_cache.display()
 # Expected Output: 3 4 1 2 5
 
 
-# In[9]:
+# In[127]:
 
 
 our_cache.set(6, 6);
@@ -156,21 +167,22 @@ our_cache.display()
 # Expected Output: 4 1 2 5 6
 
 
-# In[10]:
+# In[128]:
 
 
 our_cache.set(4,5)
-# Expected Output: Already Present!
+our_cache.display()
+# Expected Output: 1 2 5 6 5
 
 
-# In[11]:
+# In[129]:
 
 
 our_cache.get(6)
 # Expected Output: 6
 
 
-# In[12]:
+# In[130]:
 
 
 our_cache.get(3)
@@ -178,31 +190,154 @@ our_cache.display()
 # Expected Output: 4 1 2 5 6
 
 
-# In[13]:
+# In[131]:
 
 
 our_cache.get(5)
 # Expected Output: 5
 
 
-# In[14]:
+# In[132]:
 
 
 our_cache.display()
-# Expected Output: 4 1 2 6 5
+# Expected Output: 1 2 5 6 5
 
 
-# In[15]:
+# In[133]:
 
 
 our_cache.set(23, 33)
 our_cache.display()
-# Expected Output: 1 2 6 5 33
+# Expected Output: 2 5 6 5 33
 
 
-# In[87]:
+# In[134]:
 
 
 our_cache.get(3)
 # Expected Output: -1
+
+
+# In[135]:
+
+
+our_cache.set(4,5)
+our_cache.display()
+# Expected Output: 2 6 5 33 5
+
+
+# # Edge Test Cases
+
+# In[136]:
+
+
+# Case 1 - Cache capacity 1
+
+our_cache = LRU_Cache(1)
+
+
+# In[137]:
+
+
+our_cache.set(1, 1)
+our_cache.display()
+
+
+# In[138]:
+
+
+our_cache.set(2, 2)
+our_cache.display()
+# Expected Output: 1 2
+
+
+# In[139]:
+
+
+our_cache.set(3, 3)
+our_cache.display()
+# Expected Output: 2 3
+
+
+# In[140]:
+
+
+our_cache.set(2, 4)
+our_cache.display()
+# Expected Output: 3 4
+
+
+# In[141]:
+
+
+our_cache.get(2)
+
+
+# In[146]:
+
+
+our_cache.get(2)
+
+
+# In[147]:
+
+
+# Case 2 - Empty Cache
+
+our_cache = LRU_Cache(0)
+
+
+# In[148]:
+
+
+our_cache.set(1, 1)
+our_cache.display()
+
+
+# In[150]:
+
+
+our_cache.set(2, 2)
+our_cache.display()
+
+
+# In[149]:
+
+
+our_cache.get(1)
+
+
+# In[168]:
+
+
+# Case 3 - Large Capacity
+
+our_cache = LRU_Cache(5000)
+
+
+# In[169]:
+
+
+for i in range(5000):
+    our_cache.set(i, i)
+
+
+# In[170]:
+
+
+our_cache.display()
+
+
+# In[171]:
+
+
+our_cache.get(0)
+our_cache.get(254)
+
+
+# In[172]:
+
+
+our_cache.display()
 

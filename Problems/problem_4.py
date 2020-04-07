@@ -35,18 +35,19 @@ sub_child = Group("subchild")
 child_user = "child_user"
 child.add_user(child_user)
 
+child.add_group(sub_child)
+parent.add_group(child)
+
 sub_child_user_one = "sub_child_user_one"
 sub_child.add_user(sub_child_user_one)
 
 sub_child_user_two = "sub_child_user_two"
 sub_child.add_user(sub_child_user_two)
 
-child.add_group(sub_child)
-parent.add_group(child)
 print(sub_child.get_users())
 
 
-# In[2]:
+# In[18]:
 
 
 def is_user_in_group(user, group):
@@ -56,6 +57,8 @@ def is_user_in_group(user, group):
       user(str): user name/id
       group(class:Group): group to check user membership against
     """
+    if not group:
+        return None
     has_user = find_user(user, group)
     if has_user:
         return True
@@ -65,8 +68,7 @@ def is_user_in_group(user, group):
 # Helper function to find user in the group
 def find_user(user, group):
     users = group.get_users()
-    if len(users):
-        if user in users:
+    if users and user in users:
             return True
     else:
         groups = group.get_groups()
@@ -76,44 +78,60 @@ def find_user(user, group):
 
 # # Test Cases
 
-# In[3]:
+# In[10]:
 
 
 print(is_user_in_group("sub_child_user_one", sub_child))
 #True
 
 
-# In[4]:
+# In[11]:
 
 
 print(is_user_in_group('parent_user', parent))
 #False
 
 
-# In[5]:
+# In[12]:
 
 
 print(is_user_in_group('child_user', child))
 #True
 
 
-# In[6]:
-
-
-print(is_user_in_group('', child))
-#False
-
-
-# In[7]:
+# In[14]:
 
 
 print(is_user_in_group('child_user', parent))
 #True
 
 
-# In[8]:
+# In[15]:
 
 
 print(is_user_in_group('child_user', sub_child))
+#False
+
+
+# # Edge Test Cases
+
+# In[16]:
+
+
+print(is_user_in_group('', sub_child))
+#False
+
+
+# In[17]:
+
+
+print(is_user_in_group(None, sub_child))
+#False
+
+
+# In[19]:
+
+
+print(is_user_in_group(None, None))
 #False
 

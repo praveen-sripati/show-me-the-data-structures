@@ -3,7 +3,7 @@
 
 # # Problem 5: Blockchain
 
-# In[9]:
+# In[75]:
 
 
 import hashlib
@@ -39,6 +39,9 @@ class BlockChain:
     # Adds Block in BlockChain
     def add_block(self, data):
         
+        if data == "" or data is None:
+            return None
+        
         # Creates timestamp - UTC (formerly GMT)
         timestamp = datetime.datetime.utcnow()
         timestamp = timestamp.strftime("%H:%M %d/%m/%Y")
@@ -50,15 +53,7 @@ class BlockChain:
             self.tail = block
             block.block_number = self.current_block
             self.current_block += 1
-        elif self.head.right is None:  # If BlockChain has only one element
-            previous_hash = self.head.hash
-            block = Block(timestamp, data, previous_hash)
-            self.head.right = block
-            block.left = self.head
-            self.tail = block
-            block.block_number = self.current_block
-            self.current_block += 1
-        else:  # If BlockChain has more than one element
+        else:  # If BlockChain has one or more elements
             previous_hash = self.tail.hash
             block = Block(timestamp, data, previous_hash)
             block.left = self.tail
@@ -112,13 +107,13 @@ class BlockChain:
 
 # # Test Cases
 
-# In[10]:
+# In[76]:
 
 
 block_chain = BlockChain()
 
 
-# In[11]:
+# In[77]:
 
 
 block_chain.add_block("Hello!")
@@ -126,65 +121,83 @@ block_chain.add_block("It's nice to meet u!")
 block_chain.add_block("Have a nice day :)")
 
 
-# In[12]:
+# In[78]:
 
 
 block_chain.display()
 # Expected Output: Hello! -> It's nice to meet u! -> Have a nice day :) ->
 
 
-# In[13]:
+# In[79]:
 
 
 block_chain.pop_block()
 # Expected Output: Have a nice day :)
 
 
-# In[55]:
+# In[80]:
 
 
 block_chain.display()
 # Expected Output: Hello! -> It's nice to meet u! ->
 
 
-# In[14]:
+# In[81]:
 
 
 block_chain.pop_block()
 # Expected Output: It's nice to meet u!
 
 
-# In[15]:
+# In[82]:
 
 
 block_chain.display()
 # Expected Output: Hello! ->
 
 
-# In[16]:
+# In[83]:
 
 
 block_chain.pop_block()
 # Expected Output: Hello!
 
 
-# In[17]:
+# In[84]:
 
 
 block_chain.display()
 # Expected Output: Empty!
 
 
-# In[18]:
+# ## Edge Test Cases
+
+# In[85]:
 
 
-block_chain.add_block("It's Me Again xD")
+# Empty Input
+block_chain.add_block("")
 block_chain.display()
 # Expected Output: It's Me Again xD ->
 
 
-# In[ ]:
+# In[86]:
 
 
+# None Input
+block_chain.add_block(None)
+block_chain.display()
+# Expected Output: It's Me Again xD ->
 
+
+# In[87]:
+
+
+# Large Input
+large_input = ""
+for i in range(10000):
+    large_input += "a"
+
+block_chain.add_block(large_input)
+block_chain.display()
 

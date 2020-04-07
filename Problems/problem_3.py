@@ -3,7 +3,7 @@
 
 # # Problem 3: Huffman Coding
 
-# In[2]:
+# In[1]:
 
 
 # Binary Tree Node
@@ -69,13 +69,16 @@ class BinaryTree:
         return self.root
 
 
-# In[49]:
+# In[9]:
 
 
 import sys
 
 # Data encoding
 def huffman_encoding(data):
+    
+    if data == "" or data is None:
+        return None, None
     
     #Assign priority queue to hold characters with their frequency
     p_queue = PriorityQueue()
@@ -112,6 +115,9 @@ def huffman_encoding(data):
         
 # Data Decoding
 def huffman_decoding(encoded_data, tree):
+    
+    if encoded_data is None or tree is None:
+        return None
     
     #Assign a variable to store the decoded data
     decoded_data = ''
@@ -200,7 +206,7 @@ def find_frequency(data):
 
 # # Test Cases
 
-# In[50]:
+# In[10]:
 
 
 if __name__ == "__main__":
@@ -221,7 +227,7 @@ if __name__ == "__main__":
     print ("The content of the encoded data is: {}\n".format(decoded_data))
 
 
-# In[51]:
+# In[11]:
 
 
 a_great_sentence = "hello world"
@@ -240,7 +246,7 @@ print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data
 print ("The content of the encoded data is: {}\n".format(decoded_data))
 
 
-# In[56]:
+# In[12]:
 
 
 a_great_sentence = "aaaa"
@@ -257,4 +263,72 @@ decoded_data = huffman_decoding(encoded_data, tree)
 
 print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
 print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+
+# # Edge Test Cases
+
+# In[14]:
+
+
+# Empty input
+
+a_great_sentence = ""
+
+print ("The content of the data is: {}\n".format(a_great_sentence))
+
+encoded_data, tree = huffman_encoding(a_great_sentence)
+
+print ("The content of the encoded data is: {}\n".format(encoded_data))
+
+decoded_data = huffman_decoding(encoded_data, tree)
+
+print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+
+# In[17]:
+
+
+# Empty input
+
+a_great_sentence = None
+
+print ("The content of the data is: {}\n".format(a_great_sentence))
+
+encoded_data, tree = huffman_encoding(a_great_sentence)
+
+print ("The content of the encoded data is: {}\n".format(encoded_data))
+
+decoded_data = huffman_decoding(encoded_data, tree)
+
+print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+
+# In[16]:
+
+
+# Large Input
+
+a_great_sentence = ""
+
+for i in range(10000):
+    a_great_sentence += "abc"
+
+print ("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
+print ("The content of the data is: {}\n".format(a_great_sentence))
+
+encoded_data, tree = huffman_encoding(a_great_sentence)
+
+print ("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
+print ("The content of the encoded data is: {}\n".format(encoded_data))
+
+decoded_data = huffman_decoding(encoded_data, tree)
+
+print ("The size of the decoded data is: {}\n".format(sys.getsizeof(decoded_data)))
+print ("The content of the encoded data is: {}\n".format(decoded_data))
+
+
+# In[ ]:
+
+
+
 

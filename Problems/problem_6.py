@@ -3,7 +3,7 @@
 
 # # Problem 6: Union and Intersection
 
-# In[2]:
+# In[1]:
 
 
 class Node:
@@ -62,32 +62,33 @@ def union(llist_1, llist_2):
         return None
     
     if llist_1_curr is None:  # If list_1 is empty return union of the list
-        return remove_duplicates(llist_2)
+        llist_2_set = remove_duplicates(llist_2)
+        for value in llist_2_set:
+            llist_union.append(value)
+        return llist_union
+        
     elif llist_2_curr is None:  # If list_2 is empty return union of the list
-        return remove_duplicates(llist_1)
+        llist_1_set = remove_duplicates(llist_1)
+        for value in llist_1_set:
+            llist_union.append(value)
+            
     else:  # If Both lists has elements return union of both the lists
-        llist_union = LinkedList()
-        llist_union_dict = {}
         
         llist_1_set = remove_duplicates(llist_1) # Removes duplicates of list_1
         llist_2_set = remove_duplicates(llist_2) # Removes duplicates of list_2
         
-        llist_1_set_curr = llist_1_set.head
-        llist_2_set_curr = llist_2_set.head
+        for value in llist_1_set:
+            llist_union.append(value)
         
-        while llist_1_set_curr:  # Appends list1 elements in the Union LinkedList
-            llist_union_dict[llist_1_set_curr.value] = llist_1_set_curr.value
-            llist_union.append(llist_1_set_curr)
-            llist_1_set_curr = llist_1_set_curr.next
-            
-        while llist_2_set_curr:  # Appends list2 elements in the Union LinkedList if they are not in list1
-            if not llist_2_set_curr.value in llist_union_dict:
-                llist_union.append(llist_2_set_curr.value)
-            llist_2_set_curr = llist_2_set_curr.next
+        for value in llist_2_set:
+            if value not in llist_1_set:
+                llist_union.append(value)
                 
         return llist_union
     
 def intersection(llist_1, llist_2):
+    
+    llist_intersection = LinkedList()
 
     llist_1_curr = llist_1.head
     llist_2_curr = llist_2.head
@@ -95,63 +96,32 @@ def intersection(llist_1, llist_2):
     # If one of the list is empty returns None
     if llist_1_curr is None or llist_2_curr is None:
         return None
+    
     else: 
-        # Checks list size for optimization
-        # if list_1 is having less size than
-        # we just traverse list_1 cuz we will
-        # traverse less nodes
-        if llist_1.size() < llist_2.size():  
-            llist_intersec = llist_intersection(llist_1, llist_2)
-            if llist_intersec.head:
-                return llist_intersec
-            else:
-                return None
-        elif llist_2.size() < llist_1.size(): # If llist_2 size is less than llist_1
-            llist_intersec = llist_intersection(llist_2, llist_1)
-            if llist_intersec.head:
-                return llist_intersec
-            else:
-                return None
+        llist_1_set = remove_duplicates(llist_1) # Removes duplicates of list_1
+        llist_2_set = remove_duplicates(llist_2) # Removes duplicates of list_2
         
-# Helper function to remove duplicates from the llist returns llist
+        for value in llist_1_set:
+            if value in llist_2_set:
+                llist_intersection.append(value)
+        
+        return llist_intersection
+        
+# Helper function to remove duplicates from the llist returns set
 def remove_duplicates(llist):    
-    llist_set = LinkedList()
-    llist_dict = dict()
+    llist_set = set()
     
     llist_curr = llist.head
     while llist_curr:
-        if not llist_curr.value in llist_dict:
-            llist_dict[llist_curr.value] = llist_curr.value
-            llist_set.append(llist_curr.value)
+        llist_set.add(llist_curr.value)
         llist_curr = llist_curr.next
-    return llist_set
-
-# Helper function for finding intersection of two lists returns llist of intersection
-def llist_intersection(llist_one, llist_two):
-    
-    llist_intersec = LinkedList()  
-    llist_dict = {}
-    llist_one_set = remove_duplicates(llist_one) # Removes duplicates of llist_1
-    llist_two_set = remove_duplicates(llist_two) # Removes duplicates of llist_2
-    
-    llist_one_curr = llist_one_set.head
-    llist_two_curr = llist_two_set.head
-    
-    while llist_one_curr: # Traverse llist_1
-        llist_dict[llist_one_curr.value] = llist_one_curr.value  # Adds llist_1 elements to dictionary
-        llist_one_curr = llist_one_curr.next
-    
-    while llist_two_curr: # Traverse llist_2
-        if llist_dict.get(llist_two_curr.value):  # Checks if list_2 element is present in dictionary
-            llist_intersec.append(llist_two_curr.value)  # Appends element if it is common in both lists
-        llist_two_curr = llist_two_curr.next
         
-    return llist_intersec
+    return llist_set
 
 
 # # Test Cases
 
-# In[3]:
+# In[2]:
 
 
 # Test case 1
@@ -172,11 +142,11 @@ print (union(linked_list_1,linked_list_2))
 print (intersection(linked_list_1,linked_list_2))
 
 # Expected Output: 
-#   Union - 3 -> 2 -> 4 -> 35 -> 6 -> 65 -> 32 -> 9 -> 1 -> 11 -> 21 ->
-#   Intersection - 6 -> 4 -> 
+#   Union - 65 -> 2 -> 35 -> 3 -> 4 -> 6 -> 32 -> 1 -> 9 -> 11 -> 21 -> 
+#   Intersection - 4 -> 6 -> 
 
 
-# In[4]:
+# In[3]:
 
 
 # Test case 2
@@ -197,7 +167,7 @@ print (union(linked_list_1,linked_list_2))
 print (intersection(linked_list_1,linked_list_2))
 
 # Expected Output: 
-#   Union - 3 -> 2 -> 4 -> 35 -> 6 -> 65 -> 21 -> 32 -> 9 -> 1 -> 11 -> 
+#   Union - 65 -> 2 -> 35 -> 3 -> 4 -> 6 -> 21 -> 32 -> 1 -> 9 -> 11 -> 
 #   Intersection - 4 -> 6 -> 21 -> 
 
 
@@ -222,11 +192,11 @@ print (union(linked_list_3,linked_list_4))
 print (intersection(linked_list_3,linked_list_4))
 
 # Expected Output: 
-#   Union - 3 -> 2 -> 4 -> 35 -> 6 -> 65 -> 23 -> 1 -> 7 -> 8 -> 9 -> 11 -> 21 ->  
+#   Union - 3 -> 2 -> 4 -> 35 -> 6 -> 65 -> 23 -> 1 -> 7 -> 8 -> 9 -> 11 -> 21 -> 
 #   Intersection - None
 
 
-# In[6]:
+# In[4]:
 
 
 # Test case 4
@@ -251,7 +221,9 @@ print (intersection(linked_list_5, linked_list_6))
 #   Intersection - 3 -> 2 ->
 
 
-# In[7]:
+# # Edge Test Cases
+
+# In[5]:
 
 
 # Test case 5
@@ -273,13 +245,13 @@ print (intersection(linked_list_7, linked_list_8))
 
 # Expected Output: 
 #   Union - 2 -> 3 ->   
-#   Intersection - 3 -> 2 ->
+#   Intersection - None
 
 
-# In[3]:
+# In[7]:
 
 
-# Test Case 6
+# Test Case 6 - Empty lists
 
 linked_list_7 = LinkedList()
 linked_list_8 = LinkedList()
@@ -297,6 +269,40 @@ print (union(linked_list_7, linked_list_8))
 print (intersection(linked_list_7, linked_list_8))
 
 # Expected Output: 
-#   Union - 2 -> 3 ->   
-#   Intersection - 3 -> 2 ->
+#   Union - None
+#   Intersection - None
+
+
+# In[12]:
+
+
+# Test Case 7 - Large Input
+
+linked_list_7 = LinkedList()
+linked_list_8 = LinkedList()
+
+element_1 = [_ for _ in range(5000)]
+element_2 = [_ for _ in range(5000)]
+
+for i in element_1:
+    linked_list_7.append(i)
+
+for i in element_2:
+    linked_list_8.append(i)
+
+print("Union")
+print (union(linked_list_7, linked_list_8))
+print()
+print("Intersection")
+print (intersection(linked_list_7, linked_list_8))
+
+# Expected Output: 
+#   Union - None
+#   Intersection - None
+
+
+# In[ ]:
+
+
+
 

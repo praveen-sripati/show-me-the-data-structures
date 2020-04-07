@@ -1,6 +1,8 @@
 # Problem 4: Active Directory
 # Design Choice:
-Directories are in the form of trees thus, I've used **Recursion** to traverse groups to find the user in a group. I've used recursion in a loop thus worst case time complexity would be O(2^n).
+Directories are in the form of trees and Active Directory consist of groups and users of that group which is similar to a directory structure. Thus, I've used **Recursion** to traverse groups to find the user in a group.
 
-# Time complexity: O(2^n)
-# Space complexity: O(maximum_depth * users)
+# Time complexity:
+**O(mn)** where m is the number of users group and n is the number of sub-groups in a group
+# Space complexity:
+**O(mn)** to hold m users and n groups
